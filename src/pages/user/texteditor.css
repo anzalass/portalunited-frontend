@@ -1,0 +1,20 @@
+.hasil h1{
+    @apply text-3xl
+}
+
+.hasil h2 {
+    @apply text-2xl
+}
+
+.hasil h3 {
+    @apply text-xl
+}
+
+.hasil ol {
+    @apply list-decimal ml-[50px]
+    
+}
+
+.hasil ul {
+    @apply list-disc  ml-[50px]
+}
