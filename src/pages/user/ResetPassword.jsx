@@ -39,6 +39,7 @@ export default function ResetPassword() {
     }
   }, [confpassword]);
 
+  const [sidebar, setSidebar] = useState(false);
   return (
     <div>
       <div className="w-full flex">

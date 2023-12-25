@@ -12,10 +12,11 @@ import Card5 from "../../component/Card5";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { server } from "../../server";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import Footer from "../../component/Footer";
+import Sidebar from "../../component/Sidebar";
 
 export default function DetailArtikel() {
   const [comen, setComen] = useState("");
@@ -24,11 +25,14 @@ export default function DetailArtikel() {
   const [idComen, setIdComen] = useState("");
   const [namaComen, setNamaComen] = useState("");
   const [balesComenInput, setBalesComenInput] = useState(false);
+  const [recomendation, setRecomendation] = useState([]);
+  const [images, setImages] = useState([]);
   const { user } = useSelector((state) => state.user);
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [dataComen, setDataComen] = useState(null);
   const [save, setSave] = useState(null);
+  const nav = useNavigate();
 
   const postComen = async () => {
     await axios
@@ -48,24 +52,18 @@ export default function DetailArtikel() {
         toast.error("error");
       });
   };
-
-  const getComent = async () => {
-    const { data } = await axios.get(`${server}comen/get-comen/${id}`);
-    setDataComen(data?.getComen);
-  };
-
-  const balesComenFunc = async (idComen) => {
+  const postReply = async (pcid) => {
     await axios
-      .post(`${server}balescomen/post-bales-comen`, {
-        idArtikel: data?._id,
+      .post(`${server}comen/reply-comen`, {
+        parentComen: pcid,
         idUser: user?._id,
         namaUser: user.username,
-        parentComen: idComen,
         isi: balesComen,
       })
       .then((response) => {
         toast.success("sukses");
-        setBalesComen("");
+        window.location.reload();
+        setComen("");
       })
       .catch((error) => {
         console.log(error);
@@ -73,27 +71,10 @@ export default function DetailArtikel() {
       });
   };
 
-  // const getBalesComentar = () => {
-  //   axios
-  //     .get(`${server}balescomen/get-bales-comen/${id}`)
-  //     .then((response) => {
-  //       setDataBalesComen(response.data.getBalesComent);
-  //       console.log(dataBalesComen);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  const getBalesComentar = (id) => {
-    axios
-      .get(`${server}balescomen/get-bales-comen/?q=${id}`)
-      .then((response) => {
-        setDbc(response.data.balesComent);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const getComenByArtikelId = async () => {
+    await axios.get(`${server}comen/comen/${id}`).then((response) => {
+      setDataComen(response?.data?.commentsWithReply);
+    });
   };
 
   const getArtikelbyId = async () => {
@@ -101,9 +82,13 @@ export default function DetailArtikel() {
       .get(`${server}artikel/artikel/${id}`)
       .then((response) => {
         setData(response.data.artikel);
+        setRecomendation(response.data.getRecomendations);
+        setImages(response.data.images);
       })
       .catch((err) => {
         console.log(err);
+        nav("/not-found");
+        nav;
       });
   };
 
@@ -132,7 +117,6 @@ export default function DetailArtikel() {
         await axios
           .post(`${server}saved/save-artikel`, {
             title: data?.title,
-            images: data?.images[0],
             artikelId: id,
             savedBy: user._id,
           })
@@ -150,7 +134,7 @@ export default function DetailArtikel() {
     const response = await axios.get(`${server}saved/cek-save`, {
       params: {
         artikelId: id,
-        savedBy: user._id,
+        savedBy: user?._id,
       },
     });
     const { disimpan } = response.data;
@@ -165,27 +149,31 @@ export default function DetailArtikel() {
   useEffect(() => {
     getArtikelbyId();
     cekSaved();
-    getComent();
+
+    getComenByArtikelId();
   }, [id]);
 
-  useEffect(() => {}, [id]);
+  const [sidebar, setSidebar] = useState(false);
 
   return (
-    <div className="w-full">
-      <NavigationBar />
-      <div className="w-11/12 mt- flex mx-auto px-2 mt-[100px] mb-[80px] ">
-        <div className="w-[75%] bg-white min-h-screen px-2">
+    <div className="w-full font-Poppins">
+      {sidebar ? <Sidebar setSidebar={setSidebar} sidebar={sidebar} /> : null}
+      <NavigationBar setSidebar={setSidebar} sidebar={sidebar} />
+      <div className="w-[98%]  flex mx-auto px-2 mt-[20px] mb-[80px] ">
+        <div className="md:w-[75%] lg:w-[75%]  xl:w-[75%] w-[100%] min-h-screen px-2">
           <div className="mt-4">
             <h4 className="text-red-500 font-[500]">{data?.category}</h4>
-            <h1 className="text-3xl font-[500]">{data?.title}</h1>
+            <h1 className="lg:text-3xl xl:text-3xl md:text-xl text-lg sm:text-lg  font-[500]">
+              {data?.title}
+            </h1>
             <div className="flex justify-between w-full pr-3">
               <h3 className="text-[400] text-blue-600 italic mt-2">
                 {data?.author?.username}
               </h3>
-              <h3 className="text-gray-500 font-[500]">
+              <h3 className="text-gray-500 font-[500] text-sm lg:text-[14px] xl:text-[14px] md:text-[13px]">
                 {new Date(data?.createdAt).toLocaleDateString(undefined, {
                   dateStyle: "full",
-                  calendar: "islamicc",
+                  // calendar: "islamicc",
                 })}
               </h3>
             </div>
@@ -201,30 +189,15 @@ export default function DetailArtikel() {
               scrollbar={{ draggable: true }}
               className="w-full"
               pagination={{ clickableClass: true }}
-              onSlideChange={() => console.log("slide change")}
-              onSwiper={(swiper) => console.log(swiper)}
             >
-              <SwiperSlide>
-                <img
-                  src={`http://localhost:8000/${data?.images[0]}`}
-                  alt={data?.images[1]}
-                  className="h-[280px] mx-auto w-[400px] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img
-                  src={`http://localhost:8000/${data?.images[1]}`}
-                  alt={data?.images[1]}
-                  className="h-[280px] mx-auto w-[400px] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img
-                  src={`http://localhost:8000/${data?.images[2]}`}
-                  alt={data?.images[2]}
-                  className="h-[280px] mx-auto w-[400px] object-cover"
-                />
-              </SwiperSlide>
+              {images.map((image, index) => (
+                <SwiperSlide key={index}>
+                  <img
+                    src={image.image}
+                    className="h-[280px] mx-auto w-[400px] object-cover"
+                  />
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
           <div className="mt-2 mb-2">
@@ -252,23 +225,18 @@ export default function DetailArtikel() {
             className="mt-[60px] hasil"
           ></div>
         </div>
-        <div className="w-[25%] bg-white ml-2 min-h-screen">
+        <div className="w-[25%] hidden md:block lg:block xl:block  ml-2 min-h-screen">
           <div className="w-full p-3">
-            <h1 className="text-center text-2xl font-[500]">Artikel Terkait</h1>
+            <h1 className=" text-center text-2xl font-[500]">
+              Artikel Terkait
+            </h1>
           </div>
           <div className="w-full px-3 py-3">
-            <div className="mb-2">
-              <Card5 />
-            </div>
-            <div className="mb-2">
-              <Card5 />
-            </div>
-            <div className="mb-2">
-              <Card5 />
-            </div>
-            <div className="mb-2">
-              <Card5 />
-            </div>
+            {recomendation.map((r, index) => (
+              <div key={index} className="mb-2">
+                <Card5 data={r} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -289,30 +257,37 @@ export default function DetailArtikel() {
             Send
           </button>
         </div>
-        <div className="flex-col w-[70%] bg-white p-3">
-          <div className="rounded-md p-2 bg-zinc-100 my-4">
+        <div className="flex-col w-[70%] bg-white rounded-lg p-1">
+          <div className="rounded-md p-2 my-4">
             {dataComen &&
               dataComen.map((dc, index) => (
-                <div key={index} className="">
-                  <h1 className="text-[15px] font-[600]">{dc.namaUser}</h1>
+                <div key={index} className=" bg-zinc-100 rounded-lg mb-4 p-2">
+                  <h1 className="text-[15px] font-[600] font-Poppins ">
+                    {dc.namaUser}
+                  </h1>
                   <h1>{dc.isi}</h1>
-                  <h1
+                  <button
+                    className="text-blue-500 underline"
                     onClick={() => {
                       setIdComen(dc._id);
                       setNamaComen(dc.namaUser);
                       setBalesComenInput(true);
-                      getBalesComentar(dc._id);
                     }}
                   >
                     balas
+                  </button>
+                  <h1>
+                    {dc?.reply.map((bc, index) => (
+                      <div className="ml-[30px] mt-3" key={index}>
+                        <h1 className="text-[15px] font-[600] font-Poppins">
+                          {bc.namaUser}
+                        </h1>
+                        <h1>{bc.isi}</h1>
+                      </div>
+                    ))}
                   </h1>
                 </div>
               ))}
-            {dbc?.map((db, index) => (
-              <div key={index} className="">
-                <h1>{db.isi}</h1>
-              </div>
-            ))}
           </div>
 
           {balesComenInput ? (
@@ -325,7 +300,7 @@ export default function DetailArtikel() {
                 onChange={(e) => setBalesComen(e.target.value)}
               />
               <button
-                onClick={() => balesComenFunc(idComen)}
+                onClick={() => postReply(idComen)}
                 className="h-[30px] w-[50px] bg-blue-700 text-white text-sm rounded-md"
               >
                 Send

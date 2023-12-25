@@ -7,40 +7,60 @@ import NavigationBar from "../../component/NavigationBar.jsx";
 import UnderHeader from "../../component/UnderHeader.jsx";
 import axios from "axios";
 import { server } from "../../server.js";
+import Sidebar from "../../component/Sidebar.jsx";
+import CategoryHome from "../../component/CategoryHome.jsx";
 
 function HomePage() {
-  const [dbc, setDbc] = useState([]);
+  let [windowWidth, setWindowWidth] = useState(null);
+  const [populer, setPopuler] = useState([]);
+  const [terbaru, setTerbaru] = useState([]);
+  const [artikel, setArtikel] = useState([]);
 
-  const getBalesComentar = () => {
+  const HomePageApi = async () => {
     axios
-      .get(`${server}balescomen/get-bales-comen/?q=64d19be33e69fe63292d17ea`)
+      .get("http://localhost:8000/api/v2/artikel/homepage")
       .then((response) => {
-        setDbc(response.data?.balesComent);
-        console.log(dbc);
+        setPopuler(response.data.populer);
+        setTerbaru(response.data.terbaru);
+        setArtikel(response.data.artikelhomepage);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  const WindowWidth = () => {
+    var width =
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth;
+    setWindowWidth(width);
+  };
+
   useEffect(() => {
-    getBalesComentar();
+    HomePageApi();
   }, []);
+
+  useEffect(() => {
+    WindowWidth();
+  });
+
+  const [sidebar, setSidebar] = useState(false);
+
   return (
-    <div className="w-full">
-      <NavigationBar></NavigationBar>
+    <>
       <UnderHeader />
-      <JudulBlog />
-      <CardSlider />
-      <MainHomePage />
-      <div className="">
-        {dbc?.map((d, index) => (
-          <h1 key={index}>{d.isi}</h1>
-        ))}
-        tes
+      <NavigationBar sidebar={sidebar} setSidebar={setSidebar}></NavigationBar>
+      <div className="w-full mx-auto">
+        {sidebar ? <Sidebar setSidebar={setSidebar} sidebar={sidebar} /> : null}
+
+        <JudulBlog />
+        <CategoryHome />
+        <CardSlider windowWidth={windowWidth} data={populer} />
+        <MainHomePage terbaru={terbaru} artikel={artikel} />
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </>
   );
 }
 

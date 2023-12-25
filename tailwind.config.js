@@ -5,6 +5,7 @@ export default {
     fontFamily: {
       Roboto: ["Roboto", "sans-serif"],
       Poppins: ["Poppins", "sans-serif"],
+      Header: ["Bebas Neue", "sans-serif"],
     },
     extend: {
       screens: {

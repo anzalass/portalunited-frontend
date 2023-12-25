@@ -17,29 +17,35 @@ import LogoutModal from "../../component/LogoutModal";
 import Category from "../../component/Category";
 import { CiLogin } from "react-icons/ci";
 import { MdOutlineLogin } from "react-icons/md";
+import EditProfile from "../../component/EditProfile";
+import Sidebar from "../../component/Sidebar";
+import Footer from "../../component/Footer";
 
 export default function Profile() {
   const { isAuthenticated } = useSelector((state) => state.user);
   const [logout, setLogout] = useState(false);
+  const [totalArtikel, setTotalArtikel] = useState(0);
+  const [totalSave, setTotalSave] = useState(0);
   const { user } = useSelector((state) => state.user);
   let [savedPost, setSavedPost] = useState(0);
   const [data, setData] = useState([]);
   const [dataSave, setDataSave] = useState([]);
   const nav = useNavigate();
+  const [sidebar, setSidebar] = useState(false);
 
   const getYourArtikel = async () => {
     await axios
-      .get(`${server}artikel/your-artikel/${user?._id}`)
+      .get(`${server}artikel/your-profile/${user?._id}`)
       .then((response) => {
         setData(response.data.youArtikel);
-        console.log(data);
+        setDataSave(response.data.getSave);
+        setTotalArtikel(response.data.panjangArtikel);
+        setTotalSave(response.data.panjangSave);
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
-  console.log(savedPost.length);
 
   const deleteArtikel = async (e) => {
     const del = window.confirm("Are you sure");
@@ -57,29 +63,14 @@ export default function Profile() {
         });
     }
   };
-  const getSavedPost = async () => {
-    const { data } = await axios.get(`${server}saved/get-save/${user._id}`);
-    setDataSave(data.getSave);
-  };
 
   useEffect(() => {
     getYourArtikel();
-    getSavedPost();
+
     if (isAuthenticated === false) {
       nav("/login");
     }
   }, [user?._id]);
-
-  // const ArtikelList = [
-  //   {
-  //     _id: "112244",
-  //     judul:
-  //       "lorem ipsum dolor sit amet, consectetur adipiscing lorem, sed do eiusmod tempor incididunt ut lab",
-  //     category: "Sports",
-  //     tags: "manchester united, bruno, euro",
-  //     createdAt: new Date(),
-  //   },
-  // ];
 
   const columns = [
     { field: "id", headerName: "ID", minWidth: 100, flex: 0.7 },
@@ -139,35 +130,38 @@ export default function Profile() {
   return (
     <div className="w-full">
       {logout ? <LogoutModal logout={setLogout} /> : null}
-      <NavigationBar />
-      <div className="w-11/12 mx-auto mt-[100px] h-screen">
+      <NavigationBar sidebar={sidebar} setSidebar={setSidebar}></NavigationBar>
+      {sidebar ? <Sidebar setSidebar={setSidebar} sidebar={sidebar} /> : null}
+      <div className="w-11/12 mx-auto mt-[50px] min-h-screen">
         <div className="w-full rounded-lg flex relative  bg-white justify-center items-center h-[200px]">
           <button
             onClick={() => setLogout(true)}
-            className="absolute right-4 bg-red-600 px-3 w-[100px] h-[40px] text-white font-[500] rounded-md py-2 top-2"
+            className="absolute right-4 bg-red-600 px-3 flex lg:text-xl xl:text-xl md:text-[14px] sm:text-[12px] text-[11px]  text-white font-[500] rounded-md py-2 top-2"
           >
-            <span className="absolute top-2 left-3">Logout</span>{" "}
-            <MdOutlineLogin size={22} className="absolute top-[10px] right-2" />
+            Logout
+            <MdOutlineLogin
+              size={20}
+              className=" hidden md:block lg:block xl:block ml-2  mt-1"
+            />
           </button>
           <img
-            src={`http://localhost:8000/${user?.avatar}`}
+            src={user?.avatar}
             alt={user?.avatar}
-            className="h-[100px] w-[100px] rounded-full mr-2 object-cover"
+            className="lg:h-[150px] lg:w-[150px] xl:h-[150px] xl:w-[150px] md:h-[120px] md:w-[120px] sm:h-[90px] sm:w-[90px] w-[60px] h-[60px] rounded-full border-2 border-black mr-2 object-cover"
           />
           <div className="flex-col ">
-            <ol className=" list-decimal list-inside">
-              <li> {user?.username}</li>
-              <li> {user?.username}</li>
-            </ol>
-            {/* <h1 className="text-center text-2xl font-[500]">
+            <h1 className="text-start lg:text-xl xl:text-xl md:text-[15px] sm:text-[15px] text-[15px] ml-3 font-[500]">
               {user?.username}
-            </h1> */}
-            <h1 className="font-[500] pl-3 italic">
+            </h1>
+            <h1 className="font-[500] pl-3 italic lg:text-xl xl:text-xl md:text-[14px] sm:text-[12px] text-[11px] text-start">
               {new Date(user?.createdAt).toLocaleDateString(undefined, {
                 dateStyle: "full",
               })}
             </h1>
-            <h1 className="pl-3 "> Total Post :{data?.length}</h1>
+            <h1 className="pl-3  text-start lg:text-xl xl:text-xl md:text-[14px] sm:text-[12px] text-[11px]">
+              {" "}
+              Total Post :{totalArtikel}
+            </h1>
           </div>
         </div>
         <div className=" justify-between flex h-[60px] bg-black">
@@ -177,8 +171,8 @@ export default function Profile() {
               savedPost === 0 ? "bg-white text-black " : "text-white"
             } w-[50%]  my-auto flex items-center  hover:bg-white hover:text-black h-full cursor-pointer justify-center`}
           >
-            <h1 className="text-center font-[500] text-xl">
-              Your Post ({data?.length})
+            <h1 className="text-center font-[500] lg:text-xl xl:text-xl md:text-[14px] sm:text-[12px] text-[11px]">
+              Your Post ({totalSave})
             </h1>
           </div>
           <div
@@ -187,7 +181,7 @@ export default function Profile() {
               savedPost === 1 ? "bg-white text-black " : "text-white"
             } w-[50%]  my-auto flex items-center  hover:bg-white hover:text-black h-full cursor-pointer justify-center`}
           >
-            <h1 className="text-center  font-[500] text-xl">
+            <h1 className="text-center  font-[500] lg:text-xl xl:text-xl md:text-[14px] sm:text-[12px] text-[11px]">
               Saved Post ({dataSave.length})
             </h1>
           </div>
@@ -197,17 +191,26 @@ export default function Profile() {
               savedPost === 3 ? "bg-white text-black " : "text-white"
             } w-[50%]  my-auto flex items-center  hover:bg-white hover:text-black h-full cursor-pointer justify-center`}
           >
-            <h1 className="text-center  font-[500] text-xl">Category (2)</h1>
+            <h1 className="text-center  font-[500] lg:text-xl xl:text-xl md:text-[14px] sm:text-[12px] text-[11px]">
+              Category (2)
+            </h1>
           </div>
-          <div className="w-[50%] h-full my-auto justify-center flex items-center  hover:bg-white hover:text-black text-white bg-black">
-            <h1 className="text-center font-[500] text-xl">Edit Profile</h1>
+          <div
+            onClick={() => setSavedPost(4)}
+            className="w-[50%] h-full my-auto justify-center flex items-center  hover:bg-white hover:text-black text-white bg-black"
+          >
+            <h1 className="text-center font-[500] lg:text-xl xl:text-xl md:text-[14px] sm:text-[12px] text-[11px]">
+              Edit Profile
+            </h1>
           </div>
         </div>
         {savedPost === 3 ? (
           <div className="">
-            <Category />
+            <Category navigasi={setSavedPost} />
           </div>
         ) : null}
+
+        {savedPost === 4 ? <EditProfile /> : null}
 
         {savedPost === 1 ? (
           <div className="w-full flex-col mt-4">
@@ -245,6 +248,9 @@ export default function Profile() {
             )}
           </div>
         ) : null}
+      </div>
+      <div className="mt-[100px]">
+        <Footer />
       </div>
     </div>
   );

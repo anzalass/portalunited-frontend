@@ -8,7 +8,7 @@ import RegisterPage from "./pages/user/RegisterPage";
 import DetailArtikel from "./pages/user/DetailArtikel";
 import Profile from "./pages/user/Profile";
 import CreatePost from "./pages/user/CreatePost";
-import { server } from "./server";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { store } from "./redux/store";
@@ -19,6 +19,8 @@ import AllArtikel from "./pages/user/AllArtikel";
 import ForgotPassword from "./pages/user/ForgotPassword";
 import ResetPassword from "./pages/user/ResetPassword";
 import SearchResult from "./pages/user/SearchResult";
+import CategoryArtikelPage from "./pages/user/CategoryArtikelPage";
+import PageNotFound from "./pages/user/PageNotFound";
 
 function App() {
   const { isAuthenticated } = useSelector((state) => state.user);
@@ -40,6 +42,7 @@ function App() {
             element={isAuthenticated ? <HomePage /> : <RegisterPage />}
           />
           <Route path="/artikel" element={<AllArtikel />} />
+          <Route path="/artikel/category/" element={<CategoryArtikelPage />} />
           <Route path="/artikel/:id" element={<DetailArtikel />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/create" element={<CreatePost />} />
@@ -47,6 +50,8 @@ function App() {
           <Route path="/reset/" element={<ResetPassword />} />
           <Route path="/forgot" element={<ForgotPassword />} />
           <Route path="/search" element={<SearchResult />} />
+          <Route path="/not-found" element={<PageNotFound />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
         <ToastContainer
           position="top-right"

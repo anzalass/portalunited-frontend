@@ -7,6 +7,7 @@ import { server } from "../../server";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Sidebar from "../../component/Sidebar";
 
 export default function EditArtikel() {
   const { id } = useParams();
@@ -112,9 +113,11 @@ export default function EditArtikel() {
       ["link", "image", "video"],
     ],
   };
+  const [sidebar, setSidebar] = useState(false);
   return (
     <div className="w-full h-[200vh] relative">
-      <NavigationBar />
+      <NavigationBar sidebar={sidebar} setSidebar={setSidebar}></NavigationBar>
+      {sidebar ? <Sidebar setSidebar={setSidebar} sidebar={sidebar} /> : null}
       <div className="w-11/12 mx-auto mt-12">
         <h1 className="text-center text-3xl font-[700] pb-4">
           Write Your Article

@@ -1,29 +1,36 @@
+import React, { useEffect, useState } from "react";
+import NavigationBar from "../../component/NavigationBar";
+import { server } from "../../server";
 import axios from "axios";
-import NavigationBar from "../../component/NavigationBar.jsx";
-import { server } from "../../server.js";
-import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import ReactPaginate from "react-paginate";
+import Card7 from "../../component/Card7";
+import Footer from "../../component/Footer";
+import Sidebar from "../../component/Sidebar";
 
-import Card7 from "../../component/Card7.jsx";
-import Footer from "../../component/Footer.jsx";
-import Sidebar from "../../component/Sidebar.jsx";
-export default function AllArtikel() {
+export default function CategoryArtikelPage() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
   const [data, setData] = useState([]);
 
-  const getAllArtikel = async (currentPage) => {
+  const category = queryParams.get("category");
+
+  const getAllArtikelByCategory = async (currentPage) => {
     const res = await axios.get(
-      `${server}artikel/all-artikel/?page=${
+      `${server}artikel/related-category/?page=${
         currentPage ? currentPage : 1
-      }&limit=20`
+      }&category=${category}`
     );
 
     return res.data;
   };
 
+  const [sidebar, setSidebar] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
-      const initialData = await getAllArtikel();
-      setData(initialData?.allArtikel || []);
+      const initialData = await getAllArtikelByCategory();
+      setData(initialData?.Category);
     };
     fetchData();
   }, []);
@@ -31,30 +38,28 @@ export default function AllArtikel() {
   const handlePageClick = async (data) => {
     console.log(data.selected);
     let currentPage = data.selected + 1;
-    const dataArtikel = await getAllArtikel(currentPage);
-    setData(dataArtikel.allArtikel);
+    const dataArtikel = await getAllArtikelByCategory(currentPage);
+    setData(dataArtikel?.Category);
   };
-
-  const [sidebar, setSidebar] = useState(false);
 
   return (
     <div>
       <NavigationBar sidebar={sidebar} setSidebar={setSidebar}></NavigationBar>
       {sidebar ? <Sidebar setSidebar={setSidebar} sidebar={sidebar} /> : null}
       <div className="w-full h-screen">
-        <div className="w-11/12 mx-auto mt-[30px]">
-          <h1>All Artikel</h1>
-          <div className=" grid lg:grid-cols-5 xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3 ">
+        <div className="w-11/12 mx-auto mt-[10px]">
+          <div className=" grid grid-cols-5 gap-3 ">
             {data ? (
               data.map((d, index) => <Card7 data={d} key={index} />)
             ) : (
               <h1>Please Wait...</h1>
             )}
           </div>
+          <div className=" grid grid-cols-5 gap-3 "></div>
         </div>
       </div>
       <div className="">
-        <div className="mt-[160px] mb-[50px]">
+        <div className="mt-[80px] mb-[50px]">
           <ReactPaginate
             className="flex justify-center "
             previousLabel={"Back"}
@@ -69,6 +74,7 @@ export default function AllArtikel() {
             onPageChange={handlePageClick}
           />
         </div>
+
         <Footer />
       </div>
     </div>

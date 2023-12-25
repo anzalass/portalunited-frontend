@@ -5,18 +5,20 @@ import { BsTrash3 } from "react-icons/bs";
 import { server } from "../server";
 import { DataGrid } from "@mui/x-data-grid";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-export default function Category() {
+export default function Category({ navigasi }) {
   const [cat, setCat] = useState([]);
   const [name, setName] = useState("");
   const [edit, setEdit] = useState(false);
   const [idc, setId] = useState("");
+  const [img, setImg] = useState(null);
+  const nav = useNavigate();
 
   const getAllCategory = async () => {
     const { data } = await axios.get(`${server}category/`);
     setCat(data.category);
   };
-  console.log(cat);
 
   useEffect(() => {
     getAllCategory();
@@ -86,41 +88,30 @@ export default function Category() {
       )
       .then((response) => {
         toast.success("Category created successfully");
-        window.location.reload();
       })
       .catch((error) => {
         toast.error("Category already exists");
       });
   };
 
-  //     try {
-  //       await axios
-  //       .put(
-  //         `${server}category/update/${id}`,
-  //         { name },
-
-  //       )
-  //       .then((response) => {
-  //         toast.success("Category created successfully");
-  //         window.location.reload();
-  //       })
-  //       .catch((error) => {
-  //         toast.error("Category already exists");
-  //       });
-  //   } catch (error) {
-  //       console.log(error);
-  //   }
-
   const addCategory = async () => {
-    await axios
-      .post(`${server}category/create`, { name }, { withCredentials: true })
-      .then((response) => {
-        toast.success("Category created successfully");
-        window.location.reload();
-      })
-      .catch((error) => {
-        toast.error("Category already exists");
-      });
+    const Form = new FormData();
+
+    Form.append("file", img),
+      Form.append("name", name),
+      await axios
+        .post(`${server}category/create`, Form, { withCredentials: true })
+        .then((response) => {
+          toast.success("Category created successfully");
+          setName("");
+          setImg(null);
+          window.location.href("/profile");
+          nav("/profile");
+          navigasi(3);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   };
 
   return (
@@ -145,13 +136,24 @@ export default function Category() {
           </div>
         ) : (
           <div className="flex">
-            <input
-              type="text"
-              placeholder="Masukan Category"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="h-[40px] w-[20%] border-black rounded-md pl-2"
-            />
+            <div className="">
+              <div className="">
+                <input
+                  type="text"
+                  placeholder="Masukan Category"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="h-[40px] w-[100%] border-black rounded-md pl-2"
+                />
+              </div>
+              <div className="">
+                <input
+                  type="file"
+                  onChange={(e) => setImg(e.target.files[0])}
+                />
+              </div>
+            </div>
+
             <button
               type="submit"
               onClick={addCategory}
@@ -161,6 +163,12 @@ export default function Category() {
             </button>
           </div>
         )}
+        {img ? (
+          <img
+            src={URL.createObjectURL(img)}
+            className="h-[100px] w-[200px] object-cover"
+          />
+        ) : null}
       </div>
       <div className="w-full mt-4">
         {cat ? (

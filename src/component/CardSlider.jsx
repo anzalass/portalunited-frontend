@@ -11,28 +11,27 @@ import axios from "axios";
 import { server } from "../server";
 import { useEffect, useState } from "react";
 
-export default function CardSlider() {
-  const [dataSlide, setDataSlide] = useState([]);
+export default function CardSlider({ windowWidth, data }) {
+  // const [dataSlide, setDataSlide] = useState(data);
+  let [valueSlide, setVlaueSlide] = useState(0);
 
-  const getPopuler = async () => {
-    await axios
-      .get(`${server}artikel/populer`)
-      .then((response) => {
-        setDataSlide(response.data.populer);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const slideValue = () => {
+    if (windowWidth < 400) {
+      setVlaueSlide(2);
+    } else if (windowWidth > 400 && windowWidth < 800) {
+      setVlaueSlide(3);
+    } else {
+      setVlaueSlide(4);
+    }
   };
   useEffect(() => {
-    console.log(dataSlide);
-    getPopuler();
-  }, []);
+    slideValue();
+  }, [windowWidth]);
 
   return (
     <div className="w-full  justify-center items-center  flex-col rounded-b-md">
       <div className="w-11/12 bg--600 mx-auto mb-6 mt-5 ">
-        <h1 className="text-3xl font-[600]">Trending </h1>
+        <h1 className="text-xl text-center  font-Poppins">Trending </h1>
       </div>
       <div className="w-11/12 justify-center flex items-center mx-auto rounded-b-md">
         <Swiper
@@ -40,19 +39,26 @@ export default function CardSlider() {
           freeMode={true}
           navigation={true}
           modules={[Navigation, Pagination, Scrollbar, A11y]}
-          slidesPerView={dataSlide.length > 4 ? 4 : 3}
+          slidesPerView={valueSlide}
           pagination={{ clickable: true }}
-          onSlideChange={() => console.log("slide change")}
-          onSwiper={(swiper) => console.log(swiper)}
         >
-          {dataSlide &&
-            dataSlide.map((s, index) => (
+          {data.map((p, index) => {
+            return (
               <>
-                <SwiperSlide className=" bg-white rounded-b-md">
-                  <Card data={s} key={index} />
+                <SwiperSlide key={index} className=" bg-white rounded-b-md">
+                  <Card key={index} data={p} />
                 </SwiperSlide>
               </>
-            ))}
+            );
+          })}
+          {/* {data.map((data, index) => {
+            <>
+              <SwiperSlide key={index} className=" bg-white rounded-b-md">
+                <Card key={index} data={data} />
+              </SwiperSlide>
+            </>;
+          })} */}
+
           {/* <SwiperSlide className="bg-white">
             <Card />
           </SwiperSlide>

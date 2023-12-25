@@ -8,11 +8,14 @@ import axios from "axios";
 import { server } from "../../server";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../../component/Sidebar";
+import Footer from "../../component/Footer";
 
 export default function CreatePost() {
   const { isAuthenticated } = useSelector((state) => state.user);
   const { user } = useSelector((state) => state.user);
   const [isi, setIsi] = useState("");
+  const [disableBtn, setDisableBtn] = useState(false);
   const [title, setTitle] = useState("");
   const [tags, setTags] = useState("");
   const [image, setImage] = useState(null);
@@ -30,7 +33,7 @@ export default function CreatePost() {
         console.log(error);
       });
   };
-
+  const [sidebar, setSidebar] = useState(false);
   const addGambar = (e) => {
     e.preventDefault();
     setImages((prevImages) => [
@@ -53,25 +56,40 @@ export default function CreatePost() {
     if (isAuthenticated === false) {
       nav("/login");
     }
-  }, []);
+  }, [user]);
 
   const createArtikel = async (e) => {
+    setDisableBtn(true);
     e.preventDefault();
-    const artikelForm = new FormData();
+    const imageForm = new FormData();
 
-    images.forEach((img) => {
-      artikelForm.append("images", img.file);
-    });
-
-    artikelForm.append("title", title);
-    artikelForm.append("author", user?.username);
-    artikelForm.append("tags", tags);
-    artikelForm.append("authorId", user?._id);
-    artikelForm.append("isi", isi);
-    artikelForm.append("category", category);
-
-    await axios.post(`${server}artikel/create`, artikelForm);
-    console.log(user._id);
+    await axios
+      .post(`${server}artikel/create1`, {
+        title: title,
+        author: user?.username,
+        tags: tags,
+        authorId: user?._id,
+        isi: isi,
+        category: category,
+      })
+      .then((res) => {
+        imageForm.append("idartikel", res.data.CreateArtikel._id);
+        for (const file of images) {
+          imageForm.append("images", file.file);
+        }
+        axios
+          .post(`${server}artikel/images`, imageForm)
+          .then((response) => {
+            nav("/profile");
+          })
+          .catch((error) => {
+            setDisableBtn(false);
+          });
+        setDisableBtn(false);
+      })
+      .catch((error) => {
+        setDisableBtn(false);
+      });
   };
 
   const modules = {
@@ -90,20 +108,14 @@ export default function CreatePost() {
     ],
   };
   return (
-    <div className="w-full h-[200vh] relative">
-      <NavigationBar />
-      <div className="w-11/12 mx-auto mt-12">
+    <div className="w-full relative">
+      <NavigationBar sidebar={sidebar} setSidebar={setSidebar}></NavigationBar>
+      {sidebar ? <Sidebar setSidebar={setSidebar} sidebar={sidebar} /> : null}
+      <div className="w-11/12 mx-auto mt-12  min-h-screen ">
         <h1 className="text-center text-3xl font-[700] pb-4">
           Write Your Article
         </h1>
-        <div className=" justify-end w-full items-end">
-          <button
-            onClick={() => nav("/profile")}
-            className="bg-red-600 px-3 py-2 ml-[95%] text-white  rounded-md top-[100px] "
-          >
-            Batal
-          </button>
-        </div>
+
         <div className="w-full py-2">
           <input
             type="text"
@@ -113,6 +125,7 @@ export default function CreatePost() {
             className="h-[60px] w-full px-2 text-xl font-[600] shadow-md  rounded-lg"
           />
         </div>
+
         <div className="w-full py-2 mt-4">
           <select
             name=""
@@ -185,19 +198,26 @@ export default function CreatePost() {
             onChange={setIsi}
             modules={modules}
           />
-          <div
-            dangerouslySetInnerHTML={{ __html: isi }}
-            className="mt-[60px] hasil"
-          ></div>
-          <div className="mt-12">{isi}</div>
         </div>
-        <div
+        <button
           onClick={createArtikel}
-          className="w-[50%] mx-auto text-center text-white py-2 mt-[70px] rounded-md bg-blue-800"
+          disabled={disableBtn ? true : false}
+          className={`${
+            disableBtn ? " bg-blue-300" : "bg-blue-800"
+          } w-[50%] mx-auto text-center text-white py-2 mt-[70px] rounded-md`}
         >
           Publish
-        </div>
-        {/* <div dangerouslySetInnerHTML={{ __html: value }}></div> */}
+        </button>
+
+        <button
+          onClick={() => nav("/profile")}
+          className="bg-red-600 px-3 py-2 w-[50%] text-white  rounded-md  "
+        >
+          Batal
+        </button>
+      </div>
+      <div className="mt-[100px]">
+        <Footer />
       </div>
     </div>
   );

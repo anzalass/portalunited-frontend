@@ -1,9 +1,9 @@
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { server } from "../server";
-import { useEffect, useState } from "react";
 
-export default function Card7({ data }) {
+export default function Card8({ data }) {
   const nav = useNavigate();
 
   const navigasi = async () => {
@@ -27,21 +27,21 @@ export default function Card7({ data }) {
 
   return (
     <div
+      className="text-black py-2 px-2 flex w-full transition-transform duration-300 cursor-pointer  scale-100 hover:scale-105"
       onClick={navigasi}
-      className="w-full h-[200px] flex-col relative mt-[30px] transition-transform duration-300 cursor-pointer scale-100 hover:scale-105"
     >
-      <img
-        src={img}
-        alt=""
-        className="object-cover w-full h-[230px] rounded-md"
-      />
-      <div className="absolute top-[170px] bg-black h-[60px] shadow-lg  opacity-60 w-full rounded-b-md"></div>
-      <div className="">
-        <h1 className="absolute top-[170px] px-2 text-white font-[600]">
-          {data?.title.length > 30
-            ? data.title.slice(0, 30) + "..."
-            : data.title}
+      <div className="w-[80%]">
+        <h1 className=" font-Roboto text-[14px]">{data.title}</h1>
+        <h1 className=" text-sm italic font-Poppins text-red-500">
+          {data.category}
         </h1>
+      </div>
+      <div className="w-[20%] ml-3">
+        <img
+          src={img}
+          className="h-full w-full object-cover rounded-md"
+          alt="kon"
+        />
       </div>
     </div>
   );

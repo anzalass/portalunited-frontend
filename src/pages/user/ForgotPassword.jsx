@@ -4,24 +4,30 @@ import axios from "axios";
 import { server } from "../../server";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import Sidebar from "../../component/Sidebar";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     await axios
-      .post(`${server}user/forgot-password`, { email })
+      .post(`${server}user/forgot-password`, {
+        email: email,
+      })
       .then((response) => {
         toast.success(response.data.message);
+        setEmail("");
       })
       .catch((error) => {
         toast.error("email not registered");
       });
   };
-
+  const [sidebar, setSidebar] = useState(false);
   return (
     <div>
-      <NavigationBar />
+      <NavigationBar sidebar={sidebar} setSidebar={setSidebar}></NavigationBar>
+      {sidebar ? <Sidebar setSidebar={setSidebar} sidebar={sidebar} /> : null}
       <div className="w-full flex">
         <div className="w-11/12 flex justify-center items-center mx-auto h-screen ">
           <form className="justify-center flex-col items-center p-2 h-[30%] w-[40%] rounded-md shadow-2xl">
@@ -35,7 +41,7 @@ export default function ForgotPassword() {
                 value={email}
                 required
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-3 shadow-2xl  h-[40px] mt-[20px]"
+                className="w-full pl-3 shadow-2xl rounded-lg  h-[40px] mt-[20px]"
                 placeholder="example@gmail.com"
               />
             </div>
