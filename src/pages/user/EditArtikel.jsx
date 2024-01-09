@@ -127,7 +127,7 @@ export default function EditArtikel() {
             Batal
           </button>
         </div>
-        <div className="flex justify-center items-center border-black">
+        {/* <div className="flex justify-center items-center border-black">
           {data?.images &&
             data?.images.map((i, index) => (
               <img
@@ -137,7 +137,7 @@ export default function EditArtikel() {
                 alt={i}
               />
             ))}
-        </div>
+        </div> */}
         <div className="w-full py-2">
           <h1 className="text-center my-4">
             {" "}

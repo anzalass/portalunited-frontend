@@ -18,7 +18,7 @@ function HomePage() {
 
   const HomePageApi = async () => {
     axios
-      .get("http://localhost:8000/api/v2/artikel/homepage")
+      .get(`${server}api/v2/artikel/homepage`)
       .then((response) => {
         setPopuler(response.data.populer);
         setTerbaru(response.data.terbaru);
