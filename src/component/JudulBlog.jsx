@@ -6,7 +6,7 @@ export default function JudulBlog() {
         <div className="absolute xl:text-4xl lg:text-4xl md:text-3xl sm:text-2xl text-2xl text-white font-[700] mx-auto left-[30vw] top-[10vw] right-[25vw]">
           Manchester United Fanspage Blog
           <div className="text-xl">
-            Manchester is RED, Blue Just For Film 🤘
+            Manchester is RED 4EVER🤘
           </div>
         </div>
       </div>
