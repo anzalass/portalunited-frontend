@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import axios from "axios";
 import { server } from "../server";
@@ -82,11 +82,13 @@ export default function NavigationBar({ sidebar, setSidebar }) {
               : null}
           </div>
           <div className="flex">
-            <img
-              src="https://assets.manutd.com/AssetPicker/images/0/0/3/2/197240/Header-Logo1500994616801.png"
-              className="h-[60px] w-[60px]"
-              alt=""
-            />
+            <Link to={"/"}>
+              <img
+                src="https://assets.manutd.com/AssetPicker/images/0/0/3/2/197240/Header-Logo1500994616801.png"
+                className="h-[60px] w-[60px] object-cover"
+                alt=""
+              />
+            </Link>
             <h1
               className="font-[500] font-Header hidden md:block lg:block xl:block sm:block text-2xl md:text-[40px] ml-3 lg:mt-4 sm:mt-4 md:mt-4  lg:text-[40px]  cursor-pointer"
               onClick={() => nav("/")}
