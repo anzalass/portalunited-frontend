@@ -103,7 +103,7 @@ export default function DetailArtikel() {
       const { disimpan } = response.data;
       if (disimpan === true) {
         await axios
-          .delete("http://localhost:8000/api/v2/saved/delete-save-artikel", {
+          .delete(`${server}saved/delete-save-artikel`, {
             data: {
               artikelId: id,
               savedBy: user._id,
