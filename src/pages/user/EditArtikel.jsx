@@ -5,7 +5,7 @@ import "react-quill/dist/quill.snow.css";
 import axios from "axios";
 import { server } from "../../server";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../../component/Sidebar";
 
@@ -34,20 +34,6 @@ export default function EditArtikel() {
     } catch (error) {
       console.log(error);
     }
-
-    // await axios
-    //   .get(`${server}artikel/artikel/${id}`)
-    //   .then((response) => {
-    //     setData(response?.data?.artikel);
-    //     setTitle(data?.title);
-    //     setTags(data?.tags);
-    //     setIsi(data?.isi);
-    //     setCategory(data?.category);
-    //     setImage(data?.images);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   };
 
   const getCategory = async () => {
@@ -71,14 +57,6 @@ export default function EditArtikel() {
 
   const upDateArtikel = async (e) => {
     e.preventDefault();
-    // const artikelForm = new FormData();
-    // artikelForm.append("title", title);
-    // artikelForm.append("author", user?.username);
-    // artikelForm.append("tags", tags);
-    // artikelForm.append("authorId", user._id);
-    // artikelForm.append("isi", isi);
-    // artikelForm.append("category", category);
-
     const artikelForm = {
       title,
       authorId: user._id,
@@ -94,7 +72,8 @@ export default function EditArtikel() {
         nav("/profile");
       })
       .catch((error) => {
-        toast.error(error);
+        console.log(error);
+        toast.error(error?.response?.data?.message);
       });
   };
 
@@ -122,22 +101,14 @@ export default function EditArtikel() {
         <h1 className="text-center text-3xl font-[700] pb-4">
           Write Your Article
         </h1>
-        <div className=" justify-end flex w-full items-end">
-          <button className="bg-red-600 px-3 py-2  text-white  rounded-md top-[100px] ">
-            Batal
-          </button>
-        </div>
-        {/* <div className="flex justify-center items-center border-black">
-          {data?.images &&
-            data?.images.map((i, index) => (
-              <img
-                src={`http://localhost:8000/${i}`}
-                className="w-[200px] h-[200px] object-contain mx-3"
-                key={index}
-                alt={i}
-              />
-            ))}
-        </div> */}
+        <Link to={"/profile"}>
+          <div className=" justify-end flex w-full items-end">
+            <button className="bg-red-600 px-3 py-2  text-white  rounded-md top-[100px] ">
+              Batal
+            </button>
+          </div>
+        </Link>
+
         <div className="w-full py-2">
           <h1 className="text-center my-4">
             {" "}
@@ -145,6 +116,7 @@ export default function EditArtikel() {
           </h1>
           <input
             type="text"
+            required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Masukan Judul"
@@ -153,6 +125,7 @@ export default function EditArtikel() {
         </div>
         <div className="w-full py-2 mt-4">
           <select
+            required
             name=""
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -167,10 +140,12 @@ export default function EditArtikel() {
                 </option>
               ))}
           </select>
+          <p></p>
         </div>
         <div className="w-full py-2 mt-4">
           <input
             value={tags}
+            required
             onChange={(e) => setTags(e.target.value)}
             type="text"
             placeholder="Masukan Tags.."
@@ -186,12 +161,6 @@ export default function EditArtikel() {
             onChange={setIsi}
             modules={modules}
           />
-          {/* <div
-            // dangerouslySetInnerHTML={{ __html: isi }}
-            className="mt-[60px]"
-          >
-            {isi}
-          </div> */}
         </div>
         <div
           onClick={upDateArtikel}

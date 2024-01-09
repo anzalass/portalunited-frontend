@@ -10,6 +10,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../component/Sidebar";
 import Footer from "../../component/Footer";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 export default function CreatePost() {
   const { isAuthenticated } = useSelector((state) => state.user);
@@ -22,6 +24,13 @@ export default function CreatePost() {
   const [images, setImages] = useState([]);
   const [category, setCategory] = useState("");
   const [categoryData, setCategoryData] = useState([]);
+  const [errors, setError] = useState({
+    isi: "",
+    slug: "",
+    tags: "",
+    title: "",
+    category: "",
+  });
   const nav = useNavigate();
   const getCategory = async () => {
     await axios
@@ -59,8 +68,16 @@ export default function CreatePost() {
   }, [user]);
 
   const createArtikel = async (e) => {
-    setDisableBtn(true);
     e.preventDefault();
+    const swalLoading = Swal.fire({
+      title: "Memproses...",
+      html: "Mohon tunggu...",
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
     const imageForm = new FormData();
 
     await axios
@@ -80,15 +97,30 @@ export default function CreatePost() {
         axios
           .post(`${server}artikel/images`, imageForm)
           .then((response) => {
+            Swal.fire({
+              showConfirmButton: false,
+              title: "Berhasil Membuat Artikel",
+              timer: 1000,
+              icon: "success",
+            });
             nav("/profile");
           })
           .catch((error) => {
-            setDisableBtn(false);
+            toast.error(error);
+            console.log("asdas", error);
+            swalLoading.close();
           });
-        setDisableBtn(false);
       })
       .catch((error) => {
-        setDisableBtn(false);
+        toast.error(error?.response?.data?.message);
+        setError({
+          slug: error?.response?.data?.message?.errors?.slug?.message,
+          isi: error?.response?.data?.message?.errors?.isi?.message,
+          tags: error?.response?.data?.message?.errors?.tags?.message,
+          title: error?.response?.data?.message?.errors?.title?.message,
+        });
+        console.log(errors);
+        swalLoading.close();
       });
   };
 
@@ -120,10 +152,16 @@ export default function CreatePost() {
           <input
             type="text"
             value={title}
+            required={true}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Masukan Judul"
             className="h-[60px] w-full px-2 text-xl font-[600] shadow-md  rounded-lg"
           />
+          <p>
+            {errors?.isi ? (
+              <p className="text-sm text-red-500">*{errors?.isi}</p>
+            ) : null}
+          </p>
         </div>
 
         <div className="w-full py-2 mt-4">
@@ -132,6 +170,7 @@ export default function CreatePost() {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             id=""
+            required={true}
             className="w-[50%] rounded-md shadow-lg h-[40px]"
           >
             <option value="">Masukan Category</option>
@@ -142,18 +181,28 @@ export default function CreatePost() {
                 </option>
               ))}
           </select>
+          {errors?.category ? (
+            <p className="text-sm text-red-500">*{errors?.tags}</p>
+          ) : null}
         </div>
         <div className="w-full py-2 mt-4">
           <input
+            required={true}
             value={tags}
             onChange={(e) => setTags(e.target.value)}
             type="text"
             placeholder="Masukan Tags.."
             className="h-[40px] w-full px-2 shadow-md  rounded-lg"
           />
+          <p>
+            {errors?.tags ? (
+              <p className="text-sm text-red-500">*{errors?.tags}</p>
+            ) : null}
+          </p>
         </div>
         <div className="w-full py-2 mt-4">
           <input
+            required={true}
             onChange={(e) => setImage(e.target.files[0])}
             type="file"
             placeholder="Masukan Gambar.."
@@ -166,7 +215,12 @@ export default function CreatePost() {
                 src={URL.createObjectURL(image)}
                 alt=""
               />
-              <button onClick={addGambar}>add Gambar</button>
+              <button
+                className="p-3 text-xl font-abc font-[500] border-black border-[1px] rounded-full"
+                onClick={addGambar}
+              >
+                +
+              </button>
             </div>
           ) : null}
         </div>
@@ -198,6 +252,11 @@ export default function CreatePost() {
             onChange={setIsi}
             modules={modules}
           />
+          <p>
+            {errors?.isi ? (
+              <p className="text-sm text-red-500">*{errors?.isi}</p>
+            ) : null}
+          </p>
         </div>
         <button
           onClick={createArtikel}
