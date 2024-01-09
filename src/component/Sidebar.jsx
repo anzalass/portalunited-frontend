@@ -3,9 +3,11 @@ import { FaWindowClose } from "react-icons/fa";
 import axios from "axios";
 import { server } from "../server";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 export default function Sidebar({ sidebar, setSidebar }) {
   const nav = useNavigate();
+  const { user } = useSelector((state) => state.user);
   const handleLogout = async () => {
     await axios
       .get(`${server}user/logout`, { withCredentials: true })
@@ -30,8 +32,13 @@ export default function Sidebar({ sidebar, setSidebar }) {
           />
         </div>
         <div className="p-6 relative">
-          <h1 className="font-Header text-2xl ml-5">Hi, Anzalas</h1>
+          <h1 className="font-Header text-2xl ml-5">
+            {user ? `Hi, ${user?.username}` : null}
+          </h1>
           <div className="p-6 font-Poppins font-[500] text-lg">
+            <h1 onClick={() => nav("/create")} className="mb-4 hover:underline">
+              HOME
+            </h1>
             <h1 onClick={() => nav("/create")} className="mb-4 hover:underline">
               CREATE ARTIKEL
             </h1>

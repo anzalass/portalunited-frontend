@@ -37,9 +37,6 @@ export default function LoginPage() {
       })
       .catch((err) => {
         const errmsg = err.response.data.message;
-        // const $ = cheerio.load(errmsg);
-        // const errr = $("pre").text();
-
         toast.error(errmsg);
       });
   };
@@ -61,7 +58,7 @@ export default function LoginPage() {
       <div className="w-full min-h-screen flex justify-center items-center">
         <div className="w-11/12 mx-auto mt-8 shadow-lg h-[80vh] justify-center items-center">
           <form onSubmit={handleLogin} className="w-[70%] mx-auto ">
-            <h1 className="mb-4 mt-2 text-3xl font-[600]">
+            <h1 className="mb-4 mt-2 text-sm sm:text-[18px] md:text-lg lg:text-xl xl:text-2xl  font-[600]">
               Welcome to Biggest Club in the World
             </h1>
 
@@ -95,28 +92,30 @@ export default function LoginPage() {
                   className="absolute right-[12px] top-[25px]"
                 />
               )}
-              <div className="flex w-full mt-3 justify-between">
-                <h1
-                  className=" cursor-pointer  underline text-sky-700"
-                  onClick={() => nav("/register")}
+            </div>
+            <div className="py-4 w-full justify-center flex items-center md:justify-end lg:justify-end xl:justify-end">
+              <div className="">
+                <button
+                  type="submit"
+                  className="text-white rounded-md px-3 py-2 bg-[#c70101]"
                 >
-                  Belum Punya Akun ?
-                </h1>
-                <h1
-                  className=" cursor-pointer  underline text-sky-700"
-                  onClick={() => nav("/forgot")}
-                >
-                  Lupa Password ?
-                </h1>
+                  Login For United
+                </button>
               </div>
             </div>
-            <div className="py-4 ml-[90%]">
-              <button
-                type="submit"
-                className="text-white rounded-md px-3 py-2 bg-[#c70101]"
+            <div className="md:flex lg:flex sm:block xl:flex text-center md:text-[17px] sm:text-[14px] lg:text-[17px] xl:text-[17px] text-[12px]  w-full mt-3 justify-between">
+              <h1
+                className=" cursor-pointer  underline text-sky-700"
+                onClick={() => nav("/register")}
               >
-                Login
-              </button>
+                Belum Punya Akun ?
+              </h1>
+              <h1
+                className=" cursor-pointer  underline text-sky-700"
+                onClick={() => nav("/forgot")}
+              >
+                Lupa Password ?
+              </h1>
             </div>
           </form>
         </div>

@@ -59,7 +59,7 @@ export default function RegisterPage() {
       <div className="w-full min-h-screen flex justify-center items-center ">
         <div className="w-11/12 mx-auto mt-[30px] mb-[100px] shadow-lg p-3 justify-center items-center">
           <form className="w-[70%] mx-auto mb-[70px]" onSubmit={handleRegister}>
-            <h1 className="mb-4 mt-[60px] text-3xl font-[600]">
+            <h1 className="mb-4 mt-2 text-sm sm:text-[18px] md:text-lg lg:text-xl xl:text-2xl  font-[600]">
               Welcome to Biggest Club in the World
             </h1>
             <div className="py-4">
@@ -100,37 +100,37 @@ export default function RegisterPage() {
                 />
               ) : null}
             </div>
-            <div className="py-4 flex justify-between w-[100%] ">
-              <div className="relative w-[50%]">
+            <div className="py-4 md:flex lg:flex xl:flex block gap-4 justify-between w-[100%] ">
+              <div className="relative md:w-[50%] lg:w-[50%] xl:w-[50%]  ">
                 <input
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   type={openPassword ? "text" : "password"}
-                  className="w-[90%] shadow-lg pl-3 h-[40px] rounded-lg"
+                  className="w-[100%] shadow-lg pl-3 h-[40px] rounded-lg"
                   placeholder="Password.."
                 />
                 {openPassword ? (
                   <AiOutlineEyeInvisible
                     onClick={() => setOpenPassword(false)}
                     size={23}
-                    className="absolute right-[55px] top-[10px]"
+                    className="absolute right-[10px] top-[10px]"
                   />
                 ) : (
                   <AiOutlineEye
                     onClick={() => setOpenPassword(true)}
                     size={23}
-                    className="absolute right-[55px] top-[10px]"
+                    className="absolute right-[10px] top-[10px]"
                   />
                 )}
               </div>
-              <div className="relative w-[50%]">
+              <div className="relative mt-3 sm:mt-3 md:mt-0 lg:mt-0 xl:mt-0 md:w-[50%] w-full lg:w-[50%] xl:w-[50%]">
                 <input
                   required
                   value={password1}
                   onChange={(e) => setPassword1(e.target.value)}
                   type={openPassword1 ? "text" : "password"}
-                  className="w-[100%] ml-2 shadow-lg pl-3 h-[40px] rounded-lg"
+                  className="w-[100%]  shadow-lg pl-3 h-[40px] rounded-lg"
                   placeholder="Repeat Password.."
                 />
                 {openPassword1 ? (
@@ -148,7 +148,15 @@ export default function RegisterPage() {
                 )}
               </div>
             </div>
-            <div className="flex w-full justify-between">
+
+            <div className="py-4 flex justify-center  md:justify-end lg:justify-end xl:justify-end items-center w-full">
+              <div className="">
+                <button className="text-white w-[200px] rounded-md px-3 py-2 bg-[#c70101]">
+                  Sign For United
+                </button>
+              </div>
+            </div>
+            <div className="md:flex lg:flex sm:block xl:flex text-center md:text-[17px] sm:text-[14px] lg:text-[17px] xl:text-[17px] text-[12px]  w-full mt-3 justify-between">
               <h1
                 className=" cursor-pointer  underline text-sky-700"
                 onClick={() => nav("/login")}
@@ -161,12 +169,6 @@ export default function RegisterPage() {
               >
                 Lupa Password ?
               </h1>
-            </div>
-
-            <div className="py-4 ml-[77%]">
-              <button className="text-white w-[200px] rounded-md px-3 py-2 bg-[#c70101]">
-                Sign For United
-              </button>
             </div>
           </form>
         </div>

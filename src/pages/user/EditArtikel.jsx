@@ -122,8 +122,8 @@ export default function EditArtikel() {
         <h1 className="text-center text-3xl font-[700] pb-4">
           Write Your Article
         </h1>
-        <div className=" justify-end w-full items-end">
-          <button className="bg-red-600 px-3 py-2 ml-[95%] text-white  rounded-md top-[100px] ">
+        <div className=" justify-end flex w-full items-end">
+          <button className="bg-red-600 px-3 py-2  text-white  rounded-md top-[100px] ">
             Batal
           </button>
         </div>
