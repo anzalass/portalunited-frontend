@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaWindowClose } from "react-icons/fa";
 import axios from "axios";
 import { server } from "../server";
@@ -48,10 +48,15 @@ export default function Sidebar({ sidebar, setSidebar }) {
             >
               PROFILE
             </h1>
-            <h1 className="mb-4 hover:underline">ABOUT</h1>
-            <h1 onClick={handleLogout} className="mb-4 hover:underline">
-              LOGOUT
-            </h1>
+            {user ? (
+              <h1 onClick={handleLogout} className="mb-4 hover:underline">
+                LOGOUT
+              </h1>
+            ) : (
+              <Link to={"/login"}>
+                <h1 className="mb-4 hover:underline">LOGIN</h1>
+              </Link>
+            )}
           </div>
         </div>
       </div>
