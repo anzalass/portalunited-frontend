@@ -46,9 +46,9 @@ export default function CategoryArtikelPage() {
     <div>
       <NavigationBar sidebar={sidebar} setSidebar={setSidebar}></NavigationBar>
       {sidebar ? <Sidebar setSidebar={setSidebar} sidebar={sidebar} /> : null}
-      <div className="w-full h-screen">
+      <div className="w-full min-h-screen">
         <div className="w-11/12 mx-auto mt-[10px]">
-          <div className=" grid grid-cols-5 gap-3 ">
+          <div className="grid lg:grid-cols-5 xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3 ">
             {data ? (
               data.map((d, index) => <Card7 data={d} key={index} />)
             ) : (

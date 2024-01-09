@@ -49,7 +49,7 @@ export default function UnderHeader() {
                     "relative  text-[13px] flex bg-[#1a1a1a] mr-2 hover:underline"
                   }
                 >
-                  <p className="hidden mr-2 sm:block md:block lg:block xl:block">
+                  <p className="block mr-2 sm:block md:block lg:block xl:block">
                     Masuk / Daftar{" "}
                   </p>
                   <FaUser className=" top-[10px]" size={16} />
