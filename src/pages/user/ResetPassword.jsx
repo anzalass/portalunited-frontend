@@ -23,11 +23,11 @@ export default function ResetPassword() {
       .put(`${server}user/reset-password`, { password, token })
       .then((response) => {
         toast.success("Updated password");
-        nav("/");
+        concole.log("adkad")
       })
       .catch((error) => {
         toast.error(error);
-        console.log(error)
+        console.log("alsda",error)
       });
     // console.log("testi");
   };
