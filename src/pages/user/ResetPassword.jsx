@@ -27,6 +27,7 @@ export default function ResetPassword() {
       })
       .catch((error) => {
         toast.error(error);
+        console.log(error)
       });
     // console.log("testi");
   };
