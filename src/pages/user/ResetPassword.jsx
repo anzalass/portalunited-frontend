@@ -18,7 +18,7 @@ export default function ResetPassword() {
   const [hide, setHide] = useState(false);
   const [hide1, setHide1] = useState(true);
 
-  const editPassword = async () => {
+  const editPassword = async (e) => {
     await axios
       .put(`${server}user/reset-password`, { password, token })
       .then((response) => {
@@ -102,7 +102,7 @@ export default function ResetPassword() {
             <div className="w-[200px] mt-6 mx-auto bg-slate-300">
               <button
                 disabled={confpassword !== password}
-                onClick={editPassword}
+                onClick={(e)=>editPassword(e)}
                 className={`px-3 w-full  ${
                   notif ? `bg-rose-600` : null
                 }  text-white rounded-md shadow-lg py-2 bg-blue-600`}
