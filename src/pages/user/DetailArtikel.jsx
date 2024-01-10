@@ -269,7 +269,7 @@ export default function DetailArtikel() {
             type="text"
             value={comen}
             onChange={(e) => setComen(e.target.value)}
-            className="h-[50px] w-[50%] rounded-md pl-3 "
+            className="h-[50px] md:w-[70%] lg:w-[70%] xl:w-[70%] rounded-md pl-3 "
             placeholder="Leave your comment..."
           />
           <button
