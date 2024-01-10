@@ -29,7 +29,7 @@ export default function Card6({ data }) {
   return (
     <div
       onClick={navigasi}
-      className="w-full h-[200px] flex-col relative  transition-transform duration-300 cursor-pointer  scale-100 hover:scale-105"
+      className="w-full h-[200px] mt-10 flex-col relative  transition-transform duration-300 cursor-pointer  scale-100 hover:scale-105"
     >
       <img src={img} alt="" className="object-cover h-[230px] rounded-md" />
       <div className="absolute top-[170px] bg-black h-[60px] shadow-lg  opacity-60 w-full rounded-b-md"></div>

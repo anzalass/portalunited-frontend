@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import Footer from "../../component/Footer";
 import Sidebar from "../../component/Sidebar";
+import Swal from "sweetalert2";
 
 export default function DetailArtikel() {
   const [comen, setComen] = useState("");
@@ -102,6 +103,15 @@ export default function DetailArtikel() {
       });
       const { disimpan } = response.data;
       if (disimpan === true) {
+        const swalLoading = Swal.fire({
+          title: "Memproses...",
+          html: "Mohon tunggu...",
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
         await axios
           .delete(`${server}saved/delete-save-artikel`, {
             data: {
@@ -110,10 +120,21 @@ export default function DetailArtikel() {
             },
           })
           .then((response) => {
+            swalLoading.close();
             toast.success("Artikel deleted");
             setSave(false);
           });
       } else if (disimpan === false) {
+        const swalLoading = Swal.fire({
+          title: "Memproses...",
+          html: "Mohon tunggu...",
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
         await axios
           .post(`${server}saved/save-artikel`, {
             title: data?.title,
@@ -121,6 +142,7 @@ export default function DetailArtikel() {
             savedBy: user._id,
           })
           .then((response) => {
+            swalLoading.close();
             toast.success("Artikel saved");
             setSave(true);
           });

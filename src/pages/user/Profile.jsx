@@ -216,7 +216,7 @@ export default function Profile() {
           <div className="w-full flex-col mt-4">
             <div className="">
               <h1 className=" text-center"> Your Saved Post</h1>
-              <div className="grid gap-3 grid-cols-4">
+              <div className="grid lg:grid-cols-5 xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3 ">
                 {dataSave &&
                   dataSave.map((d, index) => <Card6 data={d} key={index} />)}
               </div>
