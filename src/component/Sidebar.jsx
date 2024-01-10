@@ -36,7 +36,7 @@ export default function Sidebar({ sidebar, setSidebar }) {
             {user ? `Hi, ${user?.username}` : null}
           </h1>
           <div className="p-6 font-Poppins font-[500] text-lg">
-            <h1 onClick={() => nav("/create")} className="mb-4 hover:underline">
+            <h1 onClick={() => nav("/")} className="mb-4 hover:underline">
               HOME
             </h1>
             <h1 onClick={() => nav("/create")} className="mb-4 hover:underline">

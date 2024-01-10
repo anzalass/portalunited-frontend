@@ -107,7 +107,7 @@ export default function CreatePost() {
           })
           .catch((error) => {
             toast.error(error);
-            console.log("asdas", error);
+
             swalLoading.close();
           });
       })
