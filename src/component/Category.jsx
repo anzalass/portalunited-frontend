@@ -116,37 +116,41 @@ export default function Category({ navigasi }) {
 
   return (
     <div className="w-full justify-center items-center flex-col mt-8">
-      <div className="">
+   <div className="w-[100%]">
         {edit ? (
-          <div className="flex">
-            <input
-              type="text"
-              placeholder="Masukan Category"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="h-[40px] w-[20%] border-black rounded-md pl-2"
-            />
-            <button
-              type="submit"
-              onClick={editCatt}
-              className="h-[40px] rounded-md px-2 bg-yellow-600 text-white"
-            >
-              edit Category
-            </button>
+          <div className="flex w-[100%] ">
+            <div className="w-full">
+              <input
+                type="text"
+                placeholder="Masukan Category"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="h-[40px] w-full border-black rounded-md pl-2"
+              />
+            </div>
+            <div className="w-full">
+              <button
+                type="submit"
+                onClick={editCatt}
+                className="h-[40px] rounded-md px-2 bg-yellow-600 text-white"
+              >
+                edit Category
+              </button>
+            </div>
           </div>
         ) : (
-          <div className="flex">
-            <div className="">
-              <div className="">
+          <div className="flex w-[70%]">
+            <div className="w-full">
+              <div className="w-[100%]">
                 <input
                   type="text"
                   placeholder="Masukan Category"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="h-[40px] w-[100%] border-black rounded-md pl-2"
+                  className="h-[40px] w-full border-black rounded-md pl-2"
                 />
               </div>
-              <div className="">
+              <div className="mt-4">
                 <input
                   type="file"
                   onChange={(e) => setImg(e.target.files[0])}
@@ -154,13 +158,15 @@ export default function Category({ navigasi }) {
               </div>
             </div>
 
-            <button
-              type="submit"
-              onClick={addCategory}
-              className="h-[40px] rounded-md px-2 bg-sky-700 text-white"
-            >
-              Add Category
-            </button>
+            <div className="w-full">
+              <button
+                type="submit"
+                onClick={addCategory}
+                className="h-[40px] text-sm rounded-md px-2 bg-sky-700 text-white"
+              >
+                Add Category
+              </button>
+            </div>
           </div>
         )}
         {img ? (
