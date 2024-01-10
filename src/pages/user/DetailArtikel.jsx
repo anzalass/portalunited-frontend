@@ -264,7 +264,7 @@ export default function DetailArtikel() {
       </div>
       <div className=" w-11/12 mb-[100px] mx-auto">
         <h1 className=" text-2xl font-[500]">Komentar</h1>
-        <div className="mt-5 flex mb-5">
+        <div className="md:w-[70%] lg:w-[70%] xl:w-[70%] mt-5 flex mb-5">
           <input
             type="text"
             value={comen}
