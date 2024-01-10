@@ -279,7 +279,7 @@ export default function DetailArtikel() {
             Send
           </button>
         </div>
-        <div className="flex-col w-[70%] bg-white rounded-lg p-1">
+        <div className="flex-col md:w-[70%] lg:w-[70%] xl:w-[70%] w-full bg-white rounded-lg p-1">
           <div className="rounded-md p-2 my-4">
             {dataComen &&
               dataComen.map((dc, index) => (
